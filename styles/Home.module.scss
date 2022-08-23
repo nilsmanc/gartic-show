@@ -1,0 +1,39 @@
+.container {
+  width: 600px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+
+  h1 {
+    font-weight: 800;
+    font-size: 58px;
+    color: #ffffff;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 28px;
+    text-align: center;
+
+    color: #ffffff;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-bottom: 60px;
+  }
+}
+
+.startGameButton {
+  border-radius: 40px;
+  border: 0px;
+  padding: 25px 60px;
+  background: linear-gradient(180deg, #4254b9 0%, #062042 100%);
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  font-weight: bold;
+}
