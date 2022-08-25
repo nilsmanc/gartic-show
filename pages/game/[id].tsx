@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { Canvas } from '../../components/Canvas'
 import styles from './../../styles/Game.module.scss'
 
 const Home: NextPage = () => {
@@ -28,6 +29,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.canvas}>
+          <Canvas />
           <div id='paint' />
         </div>
       </div>
