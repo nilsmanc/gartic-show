@@ -1,6 +1,17 @@
 import React from 'react'
 import styles from './Canvas.module.scss'
-export const Canvas: React.FC = ({}) => {
+
+export type PaintCoords = {
+  x: number
+  y: number
+  dx: number
+  dy: number
+}
+
+type CanvasProps = {
+  onPaint: (data: PaintCoords) => void
+}
+export const Canvas: React.FC<CanvasProps> = ({ onPaint }) => {
   const rootRef = React.useRef<HTMLCanvasElement>(null)
 
   React.useEffect(() => {
@@ -28,6 +39,8 @@ export const Canvas: React.FC = ({}) => {
             ctx.lineTo(x - dx, y - dy)
             ctx.stroke()
             ctx.closePath()
+
+            onPaint({ x, y, dy, dx })
           }
         })
       }
