@@ -7,12 +7,27 @@ import React from 'react'
 
 const Home: NextPage = () => {
   const socketRef = React.useRef<Socket>()
+  const canvasCtxRef = React.useRef<CanvasRenderingContext2D>()
   React.useEffect(() => {
-    socketRef.current = io('http://localhost:3000')
+    if (typeof window !== undefined) {
+      socketRef.current = io('http://localhost:3000')
 
-    socketRef.current.on('paint', (data) => {
-      console.log(data)
-    })
+      socketRef.current.on('clear_canvas', () => {
+        if (canvasCtxRef.current) {
+          canvasCtxRef.current?.clearRect(0, 0, 1000, 600)
+        }
+      })
+
+      socketRef.current.on('repaint', ({ x, y, dx, dy }) => {
+        if (canvasCtxRef.current) {
+          canvasCtxRef.current.beginPath()
+          canvasCtxRef.current.moveTo(x, y)
+          canvasCtxRef.current.lineTo(x - dx, y - dy)
+          canvasCtxRef.current.stroke()
+          canvasCtxRef.current.closePath()
+        }
+      })
+    }
   }, [])
 
   const onPaint = (data: PaintCoords) => {
@@ -20,6 +35,13 @@ const Home: NextPage = () => {
       socketRef.current.emit('paint', data)
     }
   }
+
+  const onClear = () => {
+    if (socketRef.current) {
+      socketRef.current.emit('clear')
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -45,7 +67,11 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.canvas}>
-          <Canvas onPaint={onPaint} />
+          <Canvas
+            onPaint={onPaint}
+            onInit={(canvasCtx) => (canvasCtxRef.current = canvasCtx)}
+            onClear={onClear}
+          />
           <div id='paint' />
         </div>
       </div>

@@ -10,8 +10,10 @@ export type PaintCoords = {
 
 type CanvasProps = {
   onPaint: (data: PaintCoords) => void
+  onInit: (ref: CanvasRenderingContext2D) => void
+  onClear: () => void
 }
-export const Canvas: React.FC<CanvasProps> = ({ onPaint }) => {
+export const Canvas: React.FC<CanvasProps> = function Canvas({ onPaint, onInit, onClear }) {
   const rootRef = React.useRef<HTMLCanvasElement>(null)
 
   React.useEffect(() => {
@@ -21,11 +23,10 @@ export const Canvas: React.FC<CanvasProps> = ({ onPaint }) => {
       const ctx = rootRef.current.getContext('2d')
 
       if (ctx) {
+        onInit(ctx)
         ctx.lineCap = 'round'
         ctx.lineWidth = 8
         ctx.strokeStyle = 'red'
-
-        //ctx.clearRect(0, 0, canvas.width, canvas.height)
 
         rootRef.current.addEventListener('mousemove', (e) => {
           const x = e.offsetX
@@ -47,5 +48,20 @@ export const Canvas: React.FC<CanvasProps> = ({ onPaint }) => {
     }
   }, [])
 
-  return <canvas ref={rootRef} className={styles.root} />
+  const handleCLickClear = () => {
+    onClear()
+    if (rootRef.current) {
+      const ctx = rootRef.current.getContext('2d')
+      ctx?.clearRect(0, 0, 1000, 600)
+    }
+  }
+
+  return (
+    <div>
+      <canvas ref={rootRef} className={styles.root} />
+      <button className={styles.clearButton} onClick={handleCLickClear}>
+        Clear
+      </button>
+    </div>
+  )
 }
