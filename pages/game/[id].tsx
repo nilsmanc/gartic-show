@@ -5,17 +5,28 @@ import styles from './../../styles/Game.module.scss'
 import { io, Socket } from 'socket.io-client'
 import React from 'react'
 
+type MessageChat = {
+  name: string
+  text: string
+}
+
 const Home: NextPage = () => {
   const socketRef = React.useRef<Socket>()
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D>()
+  const [messages, setMessages] = React.useState<MessageChat[]>([])
+  const [inputValue, setInputValue] = React.useState('')
   React.useEffect(() => {
-    if (typeof window !== undefined) {
+    if (!socketRef.current) {
       socketRef.current = io('http://localhost:3000')
 
       socketRef.current.on('clear_canvas', () => {
         if (canvasCtxRef.current) {
           canvasCtxRef.current?.clearRect(0, 0, 1000, 600)
         }
+      })
+
+      socketRef.current.on('receive_message', (data) => {
+        setMessages((prev) => [...prev, data])
       })
 
       socketRef.current.on('repaint', ({ x, y, dx, dy }) => {
@@ -27,6 +38,12 @@ const Home: NextPage = () => {
           canvasCtxRef.current.closePath()
         }
       })
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current?.disconnect()
+      }
     }
   }, [])
 
@@ -42,6 +59,16 @@ const Home: NextPage = () => {
     }
   }
 
+  const onClickSendMessage = () => {
+    if (socketRef.current) {
+      socketRef.current.emit('send_message', {
+        name: 'Nickname',
+        text: inputValue,
+      })
+      setInputValue('')
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -54,15 +81,17 @@ const Home: NextPage = () => {
           <div className={styles.chatTitle}>Чат</div>
 
           <div className={styles.chatMessages}>
-            <div className={styles.chatItem}>
-              <b>Name Surname</b>
-              <p>Sample text</p>
-            </div>
+            {messages.map((obj, i) => (
+              <div key={i} className={styles.chatItem}>
+                <b>{obj.name}</b>
+                <p>{obj.text}</p>
+              </div>
+            ))}
           </div>
 
           <div className={styles.chatInput}>
-            <input type='text' />
-            <button>Send</button>
+            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} type='text' />
+            <button onClick={onClickSendMessage}>Send</button>
           </div>
         </div>
 

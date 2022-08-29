@@ -44,7 +44,8 @@
 }
 
 .chatMessages {
-  height: calc(100% - 200px);
+  height: 65vh;
+  overflow-y: scroll;
 }
 
 .chatItem {
