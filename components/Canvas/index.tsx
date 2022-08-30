@@ -60,7 +60,7 @@ export const Canvas: React.FC<CanvasProps> = function Canvas({ onPaint, onInit, 
     <div>
       <canvas ref={rootRef} className={styles.root} />
       <button className={styles.clearButton} onClick={handleCLickClear}>
-        Clear
+        Очистить поле
       </button>
     </div>
   )
