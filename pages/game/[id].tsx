@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   const [inputValue, setInputValue] = React.useState('')
   React.useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io('https://gartic-show-backend.herokuapp.com')
+      socketRef.current = io('https://gartic-show-backend.herokuapp.com' || 'http://localhost:3000')
 
       socketRef.current.on('clear_canvas', () => {
         if (canvasCtxRef.current) {
