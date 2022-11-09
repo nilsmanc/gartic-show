@@ -1,9 +1,11 @@
+import React from 'react'
+import { io, Socket } from 'socket.io-client'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+
 import { Canvas, PaintCoords } from '../../components/Canvas'
+
 import styles from './../../styles/Game.module.scss'
-import { io, Socket } from 'socket.io-client'
-import React from 'react'
 
 type MessageChat = {
   name: string
@@ -15,9 +17,12 @@ const Home: NextPage = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D>()
   const [messages, setMessages] = React.useState<MessageChat[]>([])
   const [inputValue, setInputValue] = React.useState('')
+
   React.useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io('https://gartic-show-backend.herokuapp.com' || 'http://localhost:3000')
+      socketRef.current = io(
+        'https://web-production-a479.up.railway.app' || 'http://localhost:3000',
+      )
 
       socketRef.current.on('clear_canvas', () => {
         if (canvasCtxRef.current) {
@@ -79,7 +84,6 @@ const Home: NextPage = () => {
       <div className={styles.game}>
         <div className={styles.chat}>
           <div className={styles.chatTitle}>Чат</div>
-
           <div className={styles.chatMessages}>
             {messages.map((obj, i) => (
               <div key={i} className={styles.chatItem}>
@@ -88,13 +92,11 @@ const Home: NextPage = () => {
               </div>
             ))}
           </div>
-
           <div className={styles.chatInput}>
             <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} type='text' />
             <button onClick={onClickSendMessage}>Отправить</button>
           </div>
         </div>
-
         <div className={styles.canvas}>
           <Canvas
             onPaint={onPaint}

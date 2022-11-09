@@ -1,4 +1,5 @@
 import React from 'react'
+
 import styles from './Canvas.module.scss'
 
 export type PaintCoords = {
@@ -13,6 +14,7 @@ type CanvasProps = {
   onInit: (ref: CanvasRenderingContext2D) => void
   onClear: () => void
 }
+
 export const Canvas: React.FC<CanvasProps> = function Canvas({ onPaint, onInit, onClear }) {
   const rootRef = React.useRef<HTMLCanvasElement>(null)
 
