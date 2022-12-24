@@ -20,9 +20,8 @@ const Home: NextPage = () => {
 
   React.useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io(
-        'https://web-production-a479.up.railway.app' || 'http://localhost:3000',
-      )
+      //@ts-ignore
+      socketRef.current = io(process.env.REACT_APP_API_URL)
 
       socketRef.current.on('clear_canvas', () => {
         if (canvasCtxRef.current) {
